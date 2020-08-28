@@ -1,0 +1,50 @@
+---
+# vars file for SonarQube
+# General
+SONARQUBE_NAME: "{{ansible_operator_meta.name}}-sonarqube"
+SONARQUBE_NAMESPACE: "{{ansible_operator_meta.namespace}}"
+SONARQUBE_APP_LABEL: 
+  app: "{{SONARQUBE_NAME}}"
+SONARQUBE_IMAGE: "{{sonarqube.image}}"
+SONARQUBE_IMAGE_PULL_POLICY: "IfNotPresent"
+SONARQUBE_PORT: "{{sonarqube.port|int}}"
+SONARQUBE_VOLUME_MOUNT:
+- name: "sonarqube-data-storage"
+  mountPath: "/opt/sonarqube/data"
+- name: "sonarqube-extensions-storage"
+  mountPath: "/opt/sonarqube/extensions"
+- name: "sonarqube-logs-storage"
+  mountPath: "/opt/sonarqube/logs"
+SONARQUBE_VOLUME:
+- name: "sonarqube-data-storage"
+  persistentVolumeClaim:
+    claimName: "{{ansible_operator_meta.name}}-sonarqube-data-pvc"
+- name: "sonarqube-extensions-storage"
+  persistentVolumeClaim:
+    claimName: "{{ansible_operator_meta.name}}-sonarqube-extensions-pvc"
+- name: "sonarqube-logs-storage"
+  persistentVolumeClaim:
+    claimName: "{{ansible_operator_meta.name}}-sonarqube-logs-pvc"
+SONARQUBE_CONTAINER_USER: "{{sonarqube.container_user_id}}"
+SONARQUBE_IMAGE_PULL_SECRET: 
+SONARQUBE_CONFIGMAP_NAME: "{{SONARQUBE_NAME}}-cm"
+SONARQUBE_SERVICE_NAME: "{{ansible_operator_meta.name}}-sonarqube-service"
+SONARQUBE_SERVICE_LABEL: 
+  app: "{{SONARQUBE_NAME}}"
+  service: sonarqube-service
+SONARQUBE_SERVICE_SELECTOR: 
+  app: "{{SONARQUBE_NAME}}"
+SONARQUBE_SERVICE_PORT_NAME: "{{SONARQUBE_NAME}}-port"
+SONARQUBE_SERVICE_TYPE: "NodePort"
+SONARQUBE_DATA_PVC_NAME: "{{ansible_operator_meta.name}}-sonarqube-data-pvc"
+SONARQUBE_EXTN_PVC_NAME: "{{ansible_operator_meta.name}}-sonarqube-extensions-pvc"
+SONARQUBE_LOGS_PVC_NAME: "{{ansible_operator_meta.name}}-sonarqube-logs-pvc"
+SONARQUBE_EMBEDDED_DB_ENALBED: "{{sonarqube.database.embedded.enabled}}"
+SONARQUBE_POSTGRES_DB_ENALBED: "{{sonarqube.database.postgres.enabled}}"
+SONARQUBE_POSTGRES_HOST: "{{sonarqube.database.postgres.host}}"
+SONARQUBE_POSTGRES_PORT: "{{sonarqube.database.postgres.port}}"
+SONAR_JDBC_USERNAME: "{{sonarqube.database.postgres.user}}"
+SONAR_JDBC_PASSWORD: "{{sonarqube.database.postgres.password}}"
+SONARQUBE_POSTGRES_DBNAME: "{{sonarqube.database.postgres.db}}"
+SONARQUBE_POSTGRES_SCHEMA_NAME: "{{sonarqube.database.postgres.schema_name}}"
+SONAR_JDBC_URL: "jdbc:postgresql://{{SONARQUBE_POSTGRES_HOST}}:{{SONARQUBE_POSTGRES_PORT}}/{{SONARQUBE_POSTGRES_DBNAME}}?currentSchema={{SONARQUBE_POSTGRES_SCHEMA_NAME}}"

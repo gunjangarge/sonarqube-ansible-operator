@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: "{{SONARQUBE_NAME}}"
+    namespace: "{{SONARQUBE_NAMESPACE}}"
+    labels: 
+        {{SONARQUBE_APP_LABEL}}
+spec:
+    replicas: 1
+    selector:  
+        matchLabels:
+            {{SONARQUBE_APP_LABEL}}
+    template:
+        metadata:
+            labels:
+                {{SONARQUBE_APP_LABEL}}
+        spec:
+            volumes: {{SONARQUBE_VOLUME}}         
+            securityContext:
+              runAsUser: {{SONARQUBE_CONTAINER_USER}}
+            imagePullSecrets:
+            - name: "{{SONARQUBE_IMAGE_PULL_SECRET}}"
+            containers:
+            - name: sonarqube-container
+              image: "{{SONARQUBE_IMAGE}}"
+              imagePullPolicy: "{{SONARQUBE_IMAGE_PULL_POLICY}}"
+              ports: 
+                - containerPort: 9000
+                  name: forui
+              volumeMounts: {{SONARQUBE_VOLUME_MOUNT}}
+{% if SONARQUBE_POSTGRES_DB_ENALBED %}              
+              env:
+              - name: SONAR_JDBC_USERNAME
+                valueFrom:
+                 configMapKeyRef:
+                  name: "{{SONARQUBE_CONFIGMAP_NAME}}"
+                  key: SONAR_JDBC_USERNAME
+              - name: SONAR_JDBC_PASSWORD
+                valueFrom:
+                 configMapKeyRef:
+                  name: "{{SONARQUBE_CONFIGMAP_NAME}}"
+                  key: SONAR_JDBC_PASSWORD
+              - name: SONAR_JDBC_URL
+                valueFrom:
+                 configMapKeyRef:
+                  name: "{{SONARQUBE_CONFIGMAP_NAME}}"
+                  key: SONAR_JDBC_URL
+{% endif %}

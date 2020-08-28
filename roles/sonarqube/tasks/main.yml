@@ -1,0 +1,30 @@
+---
+# tasks file for SonarQube
+
+- name: create config map for environment variables
+  community.kubernetes.k8s:
+    state: present
+    wait: yes
+    definition: "{{ lookup('template', 'sonarqube-configmap.yaml.j2') | from_yaml  }}"
+
+- name: create sonarqube pvc
+  community.kubernetes.k8s:
+    state: present
+    wait: yes
+    definition: "{{ lookup('template', item) | from_yaml  }}"
+  with_items:
+    - "sonarqube-data-pvc.yaml.j2"
+    - "sonarqube-extensions-pvc.yaml.j2"
+    - "sonarqube-logs-pvc.yaml.j2"
+
+- name: create sonarqube service
+  community.kubernetes.k8s:
+    state: present
+    wait: yes
+    definition: "{{ lookup('template', 'sonarqube-service.yaml.j2') | from_yaml  }}"    
+
+- name: create sonarqube deployment
+  community.kubernetes.k8s:
+    state: present
+    wait: yes
+    definition: "{{ lookup('template', 'sonarqube-deployment.yaml.j2') | from_yaml  }}"

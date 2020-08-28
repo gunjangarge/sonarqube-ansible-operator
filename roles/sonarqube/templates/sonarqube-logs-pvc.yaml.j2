@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{SONARQUBE_LOGS_PVC_NAME}}"
+  namespace: "{{SONARQUBE_NAMESPACE}}"
+  labels:
+    app: "{{SONARQUBE_LOGS_PVC_NAME}}"
+    purpose: sonarqube-logs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: standard
+  volumeName: sonarqube-logs-pv

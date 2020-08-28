@@ -1,0 +1,7 @@
+---
+# Use the 'create api' subcommand to add watches to this file.
+- version: v1
+  group: apps.persistent.com
+  kind: SonarQube
+  playbook: playbooks/sonarqube.yml
+# +kubebuilder:scaffold:watch

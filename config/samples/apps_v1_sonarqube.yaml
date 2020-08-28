@@ -1,0 +1,22 @@
+apiVersion: apps.persistent.com/v1
+kind: SonarQube
+metadata:
+  name: sample
+  annotations:
+    "ansible.sdk.operatorframework.io/verbosity": "5"
+spec:
+  sonarqube:
+    image: sonarqube-ubi:8.4.1.35646
+    port: 31000
+    container_user_id:
+    database:
+      embedded: #H2 database
+        enabled: false
+      postgres:
+        enabled: true
+        host: "192.168.100.100" # postgresql service name
+        port: 5432
+        db: sonarqube
+        schema_name: public
+        user: postgres
+        password: password

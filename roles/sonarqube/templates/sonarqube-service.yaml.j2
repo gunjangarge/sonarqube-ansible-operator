@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: "{{SONARQUBE_SERVICE_NAME}}"
+    namespace: "{{SONARQUBE_NAMESPACE}}"
+    labels:
+        {{SONARQUBE_APP_LABEL}}
+spec:
+    selector: {{SONARQUBE_SERVICE_SELECTOR}}
+    type: {{SONARQUBE_SERVICE_TYPE}}
+    ports:
+        - protocol: TCP
+          port: 9000
+          targetPort: 9000
+          nodePort: {{SONARQUBE_PORT | int}}
+          name: "sonarwebport"
